@@ -1,7 +1,10 @@
 import { Configuration, OpenAIApi } from 'openai';
 
+import { ConfigService } from '@nestjs/config';
+
 const getOpenAiKeyOrThrow = () => {
-  const openAiKey = process.env.OPENAI_API_KEY;
+  const key = new ConfigService().get('OPENAI_API_KEY');
+  const openAiKey = key;
   if (!openAiKey) {
     throw new Error('OpenAI API key not specified');
   }
