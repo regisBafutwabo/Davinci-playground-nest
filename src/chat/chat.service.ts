@@ -1,3 +1,4 @@
+import * as crypto from 'crypto';
 // TODO: Modify business logic and data logic
 import {
   CreateCompletionRequest,
