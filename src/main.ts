@@ -9,13 +9,14 @@ async function bootstrap() {
   app.enableCors({
     allowedHeaders: ['content-type'],
     methods: ['GET', 'POST'],
-    origin: (origin, callback) => {
-      if (!origin || whiteList.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
+    origin: '*',
+    // (origin, callback) => {
+    //   if (!origin || whiteList.indexOf(origin) !== -1) {
+    //     callback(null, true);
+    //   } else {
+    //     callback(new Error('Not allowed by CORS'));
+    //   }
+    // },
   });
   await app.listen(4000);
 }
