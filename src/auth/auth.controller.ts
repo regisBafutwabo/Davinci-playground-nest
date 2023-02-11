@@ -6,12 +6,6 @@ import { AuthService } from './auth.service';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  // @Get()
-  // @UseGuards(GoogleOAuthGuard)
-  // async googleAuth(@Request() req) {
-  //   return '';
-  // }
-
   @Post('signup')
   async signup(@Request() req) {
     const user = await this.authService.signup(req.body);
@@ -23,10 +17,4 @@ export class AuthController {
     const token = await this.authService.login(req.body);
     return token;
   }
-
-  // @Get('google-redirect')
-  // // @UseGuards(GoogleOAuthGuard)
-  // googleAuthRedirect(@Request() req) {
-  //   return this.authService.googleLogin(req);
-  // }
 }

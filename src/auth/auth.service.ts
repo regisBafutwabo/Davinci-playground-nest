@@ -49,35 +49,4 @@ export class AuthService {
       };
     }
   }
-
-  // async googleLogin(req) {
-  //   this.logger.verbose('Logging in...');
-  //   if (!req?.user) {
-  //     throw new HttpException(
-  //       {
-  //         status: HttpStatus.FORBIDDEN,
-  //         error: 'No user was found',
-  //       },
-  //       HttpStatus.FORBIDDEN,
-  //     );
-  //   }
-  //   this.logger.verbose('REQUEST', req, req.user);
-  //   const user = await this.usersService.findUser(req.user.email);
-  //   if (user) {
-  //     this.logger.verbose({
-  //       message: 'User information from google',
-  //       user: req.user,
-  //     });
-  //     return user;
-  //   } else {
-  //     const newUser = await this.usersService.createUser(req.user);
-
-  //     this.logger.verbose({
-  //       message: 'User information from google',
-  //       user: req.user,
-  //     });
-
-  //     return newUser;
-  //   }
-  // }
 }

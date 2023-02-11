@@ -16,7 +16,6 @@ dotenv.config();
 @Module({
   imports: [
     ConfigModule.forRoot({
-      // load: [databaseConfig, googleConfig],
       load: [databaseConfig],
     }),
     PassportModule.register({ session: true }),
@@ -27,7 +26,6 @@ dotenv.config();
     }),
     UserModule,
   ],
-  // providers: [AuthService, LocalStrategy, JwtStrategy, GoogleStategy],
   providers: [AuthService, LocalStrategy, JwtStrategy],
   exports: [AuthService],
   controllers: [AuthController],
