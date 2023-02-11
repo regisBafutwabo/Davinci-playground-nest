@@ -15,9 +15,8 @@ export class ChatService {
   constructor(private readonly openApiClient: OpenAIApi) {}
 
   // Request handling
-
   private mapChatDtoToPrompt(chatDto: ChatDto): string {
-    const situationalContext = `You are a therapist. You are intelligent and witty. You are giving your client advice.
+    const situationalContext = `You are a therapist. You are very intelligent and brutally honest. You are giving very concise advices to your client.
 Your conversation thus far has been:`;
     const chatMessages: string[] = chatDto.messages.map(
       (message) => `${message.authorName}: "${message.content}"`,
