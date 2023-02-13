@@ -38,7 +38,8 @@ ${inquiryToRespond}`;
       model: 'text-davinci-003',
       prompt: prompt,
       max_tokens: 500,
-      temperature: 0.5,
+      temperature: 0.91,
+      // best_of: 1, // too expensive
     };
     return languageModelRequest;
   };
@@ -55,6 +56,7 @@ ${inquiryToRespond}`;
   private parseResponseIntoChatMessage = (
     languageModelResponse: string,
   ): ChatMessageDto => {
+    // TODO: modify it with a better code
     // assuming format \nAUTHOR_NAME: "message"
     const [authorNameRaw, messageInQuotes] = languageModelResponse.split(':');
     const authorName = authorNameRaw.trim().replaceAll('\n', '');
