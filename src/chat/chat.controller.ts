@@ -18,6 +18,12 @@ export class ChatController {
 
   @Post('/respond')
   respond(@Body() chatDto: ChatDto): Promise<ChatDto> {
-    return this.chatService.respondToChat(chatDto);
+    try {
+      console.log('HERERERER');
+      return this.chatService.respondToChat(chatDto);
+    } catch (error) {
+      console.log('ERROR', error.message);
+      return error.message;
+    }
   }
 }
