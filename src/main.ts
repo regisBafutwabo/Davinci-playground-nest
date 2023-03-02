@@ -2,7 +2,10 @@ import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app.module';
 
-const whiteList = process.env.WHITE_LIST;
+const whiteList = [
+  'http://localhost:3000',
+  'https://chat-eosin-two.vercel.app',
+];
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
