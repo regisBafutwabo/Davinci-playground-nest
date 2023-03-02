@@ -12,7 +12,7 @@ async function bootstrap() {
   app.enableCors({
     allowedHeaders: ['content-type'],
     methods: ['GET', 'POST'],
-    origin: true,
+    origin: whiteList,
   });
   await app.listen(4000);
 }
