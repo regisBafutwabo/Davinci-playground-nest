@@ -1,15 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
 import { ChatModule } from './chat/chat.module';
 import databaseConfig from './config/database.config';
 import { UserEntity } from './user/user.entity';
-import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -17,9 +14,9 @@ import { UserModule } from './user/user.module';
       load: [databaseConfig],
     }),
     ChatModule,
-    AuthModule,
-    UserModule,
-    PassportModule,
+    // AuthModule,
+    // UserModule,
+    // PassportModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
