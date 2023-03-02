@@ -1,12 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ChatModule } from './chat/chat.module';
 import databaseConfig from './config/database.config';
-import { UserEntity } from './user/user.entity';
 
 @Module({
   imports: [
@@ -17,16 +15,16 @@ import { UserEntity } from './user/user.entity';
     // AuthModule,
     // UserModule,
     // PassportModule,
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        url: configService.get('database.url'),
-        ssl: true,
-        entities: [UserEntity],
-      }),
-      inject: [ConfigService],
-    }),
+    // TypeOrmModule.forRootAsync({
+    //   imports: [ConfigModule],
+    //   useFactory: (configService: ConfigService) => ({
+    //     type: 'postgres',
+    //     url: configService.get('database.url'),
+    //     ssl: true,
+    //     entities: [UserEntity],
+    //   }),
+    //   inject: [ConfigService],
+    // }),
   ],
   controllers: [AppController],
   providers: [AppService],
