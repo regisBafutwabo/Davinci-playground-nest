@@ -1,42 +1,53 @@
 import * as crypto from 'crypto';
 // TODO: Modify business logic and data logic
 import {
-  CreateCompletionRequest,
-  CreateCompletionResponse,
+  ChatCompletionRequestMessage,
+  ChatCompletionRequestMessageRoleEnum,
+  ChatCompletionResponseMessage,
+  CreateChatCompletionRequest,
+  CreateChatCompletionResponse,
   OpenAIApi,
 } from 'openai';
 
 import { Injectable } from '@nestjs/common';
 
-import { ChatDto, ChatMessageDto } from './dto';
+import {
+  ChatDto,
+  ChatMessageDto,
+} from './dto';
 
 @Injectable()
 export class ChatService {
   constructor(private readonly openApiClient: OpenAIApi) {}
 
   // Request handling
-  private mapChatDtoToPrompt(chatDto: ChatDto): string {
+  private mapChatDtoToPrompt(chatDto: ChatDto): ChatCompletionRequestMessage[] {
     const situationalContext = `You are a therapist. You are very intelligent and brutally honest. You are giving very concise advices to your client.
 Your conversation thus far has been:`;
-    const chatMessages: string[] = chatDto.messages.map(
-      (message) => `${message.authorName}: "${message.content}"`,
-    );
-    const inquiryToRespond =
-      'Please respond, following the same conversation format.';
-    const languageModelPrompt = `
-${situationalContext}\n
-${chatMessages.join('\n')}\n
-${inquiryToRespond}`;
+    const chatMessages = chatDto.messages.map((message) => ({
+      role:
+        message.authorName === 'user'
+          ? ChatCompletionRequestMessageRoleEnum.User
+          : ChatCompletionRequestMessageRoleEnum.Assistant,
+      content: message.content,
+    }));
+    const languageModelPrompt: ChatCompletionRequestMessage[] = [
+      {
+        role: ChatCompletionRequestMessageRoleEnum.System,
+        content: situationalContext,
+      },
+      ...chatMessages,
+    ];
     return languageModelPrompt;
   }
 
   private buildRequestFromChat = (
     chatDto: ChatDto,
-  ): CreateCompletionRequest => {
+  ): CreateChatCompletionRequest => {
     const prompt = this.mapChatDtoToPrompt(chatDto);
-    const languageModelRequest: CreateCompletionRequest = {
-      model: 'text-davinci-003',
-      prompt: prompt,
+    const languageModelRequest: CreateChatCompletionRequest = {
+      model: 'gpt-3.5-turbo',
+      messages: prompt,
       max_tokens: 500,
       temperature: 0.5,
     };
@@ -45,23 +56,20 @@ ${inquiryToRespond}`;
 
   // Response handling
 
-  private getNextMessageOrThrow = (response: CreateCompletionResponse) => {
-    const languageModelResponse = response.choices[0].text;
+  private getNextMessageOrThrow = (response: CreateChatCompletionResponse) => {
+    const languageModelResponse = response.choices[0].message;
     if (!languageModelResponse)
       throw new Error('Cannot get chat dto from language model response.');
     return languageModelResponse;
   };
 
   private parseResponseIntoChatMessage = (
-    languageModelResponse: string,
+    languageModelResponse: ChatCompletionResponseMessage,
   ): ChatMessageDto => {
-    // assuming format \nAUTHOR_NAME: "message"
-    const [authorNameRaw, messageInQuotes] = languageModelResponse.split(':');
-    const authorName = authorNameRaw.trim().replaceAll('\n', '');
-    const content = messageInQuotes.trim().replaceAll('"', '');
+    const { role, content } = languageModelResponse;
     // TODO: AFter connecting to DB change the logic here
     return {
-      authorName,
+      authorName: role,
       content,
       id: crypto.randomUUID(),
       createdAt: Date.now(),
@@ -70,7 +78,7 @@ ${inquiryToRespond}`;
 
   private getChatDtoFromLanguageModelResponse(
     chatBeforeResponse: ChatDto,
-    response: CreateCompletionResponse,
+    response: CreateChatCompletionResponse,
   ): ChatDto {
     const languageModelResponse = this.getNextMessageOrThrow(response);
     const responseAsMessage = this.parseResponseIntoChatMessage(
@@ -84,10 +92,9 @@ ${inquiryToRespond}`;
   public async respondToChat(chatDto: ChatDto): Promise<ChatDto> {
     const languageModelRequest = this.buildRequestFromChat(chatDto);
 
-    const languageModelResponse = await this.openApiClient.createCompletion(
+    const languageModelResponse = await this.openApiClient.createChatCompletion(
       languageModelRequest,
     );
-
     return this.getChatDtoFromLanguageModelResponse(
       chatDto,
       languageModelResponse.data,

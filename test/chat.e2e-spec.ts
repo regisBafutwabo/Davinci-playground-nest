@@ -2,7 +2,10 @@ import { ChatDto } from 'src/chat/dto/chat.dto';
 import * as request from 'supertest';
 
 import { INestApplication } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
+import {
+  Test,
+  TestingModule,
+} from '@nestjs/testing';
 
 import { AppModule } from '../src/app.module';
 
@@ -27,13 +30,13 @@ describe('ChatController (e2e)', () => {
   const aChat = (): ChatDto => ({
     messages: [
       {
-        authorName: 'therapist',
+        authorName: 'assistant',
         content: 'Hi, how are you?',
         createdAt: new Date().getTime(),
         id: '4e6a8e0a-5b51-4330-8356-572d51970e37',
       },
       {
-        authorName: 'me',
+        authorName: 'user',
         content: 'Good.',
         createdAt: new Date().getTime() + 1,
         id: '4e6a8e0a-5b51-4330-8356-572d51970e38',
